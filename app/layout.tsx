@@ -17,12 +17,12 @@ const jetbrains = JetBrains_Mono({
 const siteName = 'Convertly'
 const description =
   'A modern, immersive unit converter for length, mass, volume, temperature, ' +
-  'data, energy, speed and more — fast, accurate and mobile-first.'
+  'data, energy, speed and more. Fast, accurate and mobile-first.'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://convertly.app'),
   title: {
-    default: `${siteName} — Modern Unit Converter`,
+    default: `${siteName} · Modern Unit Converter`,
     template: `%s · ${siteName}`,
   },
   description,
@@ -39,12 +39,12 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     siteName,
-    title: `${siteName} — Modern Unit Converter`,
+    title: `${siteName} · Modern Unit Converter`,
     description,
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${siteName} — Modern Unit Converter`,
+    title: `${siteName} · Modern Unit Converter`,
     description,
   },
   robots: { index: true, follow: true },

@@ -47,7 +47,7 @@ body {
   min-height: 100dvh;
 }
 
-/* Animated gradient-mesh backdrop — the "immersive" layer. */
+/* Animated gradient-mesh backdrop, the "immersive" layer. */
 .aurora {
   position: fixed;
   inset: 0;

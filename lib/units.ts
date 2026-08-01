@@ -332,7 +332,7 @@ export function convert(
  * magnitudes so the UI never shows an unreadable wall of zeros.
  */
 export function formatResult(value: number): string {
-  if (!Number.isFinite(value)) return '—'
+  if (!Number.isFinite(value)) return '·'
   if (value === 0) return '0'
   const abs = Math.abs(value)
   if (abs !== 0 && (abs < 1e-6 || abs >= 1e15)) {

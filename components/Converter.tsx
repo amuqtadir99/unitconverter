@@ -253,7 +253,7 @@ export default function Converter() {
                   transition={{ duration: 0.25 }}
                   className="block break-words font-mono text-4xl font-bold text-accent sm:text-5xl"
                 >
-                  {valid ? formatResult(result) : '—'}
+                  {valid ? formatResult(result) : '·'}
                 </motion.output>
               </AnimatePresence>
             </div>
