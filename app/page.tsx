@@ -6,7 +6,7 @@ const features = [
   {
     icon: '⚡',
     title: 'Instant & accurate',
-    body: 'Conversions update as you type, computed from precise SI factors — no rounding surprises.',
+    body: 'Conversions update as you type, computed from precise SI factors, with no rounding surprises.',
   },
   {
     icon: '🧊',
@@ -74,7 +74,7 @@ export default function Home() {
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-pretty text-base text-ink-muted sm:text-lg">
           A production-grade converter for length, mass, volume, temperature,
-          data, energy and more — precise, immersive and lightning fast.
+          data, energy and more. Precise, immersive and lightning fast.
         </p>
       </section>
 
@@ -99,10 +99,36 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="mt-16 border-t border-ink/10 pt-6 text-center text-sm text-ink-muted">
+      <footer className="mt-16 border-t border-ink/10 pt-8 text-center text-sm text-ink-muted">
+        {/* Support widget */}
+        <div className="mb-6">
+          <p className="mb-3 text-xs">
+            Enjoying Convertly? Help support the project.
+          </p>
+          <a
+            href="https://buymeacoffee.com/amuqtadir"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-2xl bg-[#FFDD00] px-5 py-3 font-semibold text-[#17130a] shadow-glass transition hover:-translate-y-0.5 hover:shadow-glass-lg"
+          >
+            <span aria-hidden>☕</span>
+            Buy me a coffee
+          </a>
+        </div>
         <p>
           Built with Next.js, TypeScript, Tailwind CSS & Framer Motion. All
           conversions run locally in your browser.
+        </p>
+        <p className="mt-2">
+          Made by{' '}
+          <a
+            href="https://www.amuqtadir.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-accent underline-offset-4 hover:underline"
+          >
+            abdul muqtadir
+          </a>
         </p>
         <p className="mt-2 text-xs">
           © {new Date().getFullYear()} Convertly · Open source

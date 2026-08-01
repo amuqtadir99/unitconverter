@@ -1,4 +1,4 @@
-# Convertly — Project Memory
+# Convertly - Project Memory
 
 Guidance for any AI/dev agent working in this repo. Keep this file current; it is
 the single source of truth for architecture, conventions, and shipping standards.
@@ -42,7 +42,7 @@ lib/
   units.ts        Conversion engine: categories, units, convert(), formatResult()
 ```
 
-### Conversion engine (`lib/units.ts`) — the core
+### Conversion engine (`lib/units.ts`) - the core
 
 - Every `Unit` declares `toBase`/`fromBase`. Most are `linear(id, name, symbol, factor)`;
   temperature and `L/100km` use custom `affine`/inverse functions.
@@ -67,7 +67,7 @@ npm run lint       # next lint
 - **Accessibility:** semantic landmarks, `aria-label`s on icon-only controls,
   `role="tab"`/`aria-selected` on category pills, honors `prefers-reduced-motion`.
 - **Performance:** everything renders statically; keep First Load JS lean. All
-  conversion math runs client-side — no network calls, no analytics beacons.
+  conversion math runs client-side - no network calls, no analytics beacons.
 - **Design tokens:** colors/spacing live as CSS variables in `globals.css` and are
   surfaced to Tailwind via `tailwind.config.ts`. Theme both light and dark.
 - **Security:** hardening headers set in `next.config.mjs`; keep the runtime Next
@@ -81,26 +81,26 @@ npm run lint       # next lint
 These informed the workflow and standards for shipping this app. Consult them
 when extending the project; they are references, not runtime dependencies.
 
-- **[JustVugg/colibri](https://github.com/JustVugg/colibri)** — lightweight,
+- **[JustVugg/colibri](https://github.com/JustVugg/colibri)** - lightweight,
   fast UI patterns; informs the minimal-footprint, component-first structure.
-- **[ruvnet/ruflo](https://github.com/ruvnet/ruflo)** — agentic/workflow
+- **[ruvnet/ruflo](https://github.com/ruvnet/ruflo)** - agentic/workflow
   orchestration patterns for structuring multi-step build tasks.
-- **[AgriciDaniel/claude-seo](https://github.com/AgriciDaniel/claude-seo)** —
+- **[AgriciDaniel/claude-seo](https://github.com/AgriciDaniel/claude-seo)** -
   SEO playbook: drives the metadata, JSON-LD `WebApplication` schema, sitemap,
   robots, and per-category discoverability here.
 - **[nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)**
-  — UI/UX heuristics behind the immersive 3D/glassmorphism design system,
+  - UI/UX heuristics behind the immersive 3D/glassmorphism design system,
   spacing rhythm, and responsive layout.
 - **[rohitg00/awesome-claude-code-toolkit](https://github.com/rohitg00/awesome-claude-code-toolkit)**
-  — curated Claude Code tooling/skills; reference for repo automation and DX.
+  - curated Claude Code tooling/skills; reference for repo automation and DX.
 - **[drona23/claude-token-efficient](https://github.com/drona23/claude-token-efficient)**
-  — token-efficiency practices: write files directly, avoid redundant fetches,
+  - token-efficiency practices: write files directly, avoid redundant fetches,
   batch independent operations, cite references instead of re-deriving them.
 
 ## Roadmap ideas
 
 - URL state (`?cat=length&from=m&to=ft&v=20`) for shareable conversions.
 - Favorites / recent conversions in localStorage.
-- Currency conversion (needs a rates API — would add a server route).
+- Currency conversion (needs a rates API - would add a server route).
 - Keyboard shortcuts and command palette.
 - Unit tests for `lib/units.ts` (Vitest) covering round-trips and edge magnitudes.

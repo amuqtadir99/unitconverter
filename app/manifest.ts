@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Convertly — Modern Unit Converter',
+    name: 'Convertly · Modern Unit Converter',
     short_name: 'Convertly',
     description:
       'A modern, immersive unit converter for length, mass, volume, temperature and more.',
