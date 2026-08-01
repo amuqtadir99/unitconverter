@@ -68,7 +68,7 @@ export default function Home() {
           {CATEGORIES.length} categories · {' '}
           {CATEGORIES.reduce((n, c) => n + c.units.length, 0)} units
         </span>
-        <h1 className="text-balance text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-6xl">
+        <h1 className="text-balance text-4xl font-extrabold leading-[1.12] tracking-tight sm:text-6xl">
           Convert anything,{' '}
           <span className="text-shimmer">beautifully</span>.
         </h1>

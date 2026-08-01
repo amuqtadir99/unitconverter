@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   AnimatePresence,
   motion,
@@ -98,8 +98,21 @@ export default function Converter() {
     setPair(defaultPair(cat))
   }
 
-  function swap() {
-    setPair(([f, t]) => [t, f])
+  // Center button: walk the target unit forward through the category list in
+  // order and loop back to the start, skipping the source unit so it never
+  // lands on an identity conversion. Deterministic, so the "next" unit is
+  // always predictable.
+  function cycleTarget() {
+    const ids = category.units.map((u) => u.id)
+    const n = ids.length
+    let idx = ids.indexOf(toId)
+    for (let step = 0; step < n; step++) {
+      idx = (idx + 1) % n
+      if (ids[idx] !== fromId) {
+        setPair([fromId, ids[idx]])
+        return
+      }
+    }
   }
 
   const fromUnit = category.units.find((u) => u.id === fromId)!
@@ -131,40 +144,134 @@ export default function Converter() {
     ry.set(0)
   }
 
+  // Category strip: on desktop there is no touch-scroll, so expose arrow
+  // controls and translate a plain vertical wheel into horizontal scroll.
+  const tabsRef = useRef<HTMLDivElement>(null)
+  const [tabScroll, setTabScroll] = useState({ left: false, right: false })
+
+  const updateTabArrows = useCallback(() => {
+    const el = tabsRef.current
+    if (!el) return
+    setTabScroll({
+      left: el.scrollLeft > 4,
+      right: el.scrollLeft + el.clientWidth < el.scrollWidth - 4,
+    })
+  }, [])
+
+  useEffect(() => {
+    updateTabArrows()
+    const el = tabsRef.current
+    if (!el) return
+    const onWheel = (e: WheelEvent) => {
+      if (el.scrollWidth <= el.clientWidth) return
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return
+      e.preventDefault()
+      el.scrollLeft += e.deltaY
+      updateTabArrows()
+    }
+    el.addEventListener('wheel', onWheel, { passive: false })
+    window.addEventListener('resize', updateTabArrows)
+    return () => {
+      el.removeEventListener('wheel', onWheel)
+      window.removeEventListener('resize', updateTabArrows)
+    }
+  }, [updateTabArrows])
+
+  function scrollTabs(dir: -1 | 1) {
+    const el = tabsRef.current
+    if (!el) return
+    el.scrollBy({
+      left: dir * Math.max(el.clientWidth * 0.7, 220),
+      behavior: 'smooth',
+    })
+  }
+
   return (
     <div className="w-full">
       {/* Category tabs */}
-      <div
-        className="mb-6 flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        role="tablist"
-        aria-label="Conversion categories"
-      >
-        {CATEGORIES.map((c) => {
-          const active = c.id === categoryId
-          return (
-            <button
-              key={c.id}
-              role="tab"
-              aria-selected={active}
-              onClick={() => selectCategory(c.id)}
-              className={`relative flex shrink-0 items-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-semibold transition ${
-                active ? 'text-white' : 'text-ink-muted hover:text-ink'
-              }`}
-            >
-              {active && (
-                <motion.span
-                  layoutId="cat-pill"
-                  className="absolute inset-0 rounded-2xl bg-accent shadow-glow"
-                  transition={{ type: 'spring', stiffness: 400, damping: 32 }}
-                />
-              )}
-              <span className="relative z-10" aria-hidden>
-                {c.icon}
-              </span>
-              <span className="relative z-10 whitespace-nowrap">{c.name}</span>
-            </button>
-          )
-        })}
+      <div className="relative mb-6">
+        {/* Desktop scroll-left control */}
+        <button
+          type="button"
+          onClick={() => scrollTabs(-1)}
+          aria-label="Scroll categories left"
+          className={`glass absolute left-0 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 place-items-center rounded-full text-ink transition-opacity sm:grid ${
+            tabScroll.left ? 'opacity-100' : 'pointer-events-none opacity-0'
+          }`}
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden
+          >
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </button>
+
+        <div
+          ref={tabsRef}
+          onScroll={updateTabArrows}
+          className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] sm:px-11 [&::-webkit-scrollbar]:hidden"
+          role="tablist"
+          aria-label="Conversion categories"
+        >
+          {CATEGORIES.map((c) => {
+            const active = c.id === categoryId
+            return (
+              <button
+                key={c.id}
+                role="tab"
+                aria-selected={active}
+                onClick={() => selectCategory(c.id)}
+                className={`relative flex shrink-0 items-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-semibold transition ${
+                  active ? 'text-white' : 'text-ink-muted hover:text-ink'
+                }`}
+              >
+                {active && (
+                  <motion.span
+                    layoutId="cat-pill"
+                    className="absolute inset-0 rounded-2xl bg-accent shadow-glow"
+                    transition={{ type: 'spring', stiffness: 400, damping: 32 }}
+                  />
+                )}
+                <span className="relative z-10" aria-hidden>
+                  {c.icon}
+                </span>
+                <span className="relative z-10 whitespace-nowrap">{c.name}</span>
+              </button>
+            )
+          })}
+        </div>
+
+        {/* Desktop scroll-right control */}
+        <button
+          type="button"
+          onClick={() => scrollTabs(1)}
+          aria-label="Scroll categories right"
+          className={`glass absolute right-0 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 place-items-center rounded-full text-ink transition-opacity sm:grid ${
+            tabScroll.right ? 'opacity-100' : 'pointer-events-none opacity-0'
+          }`}
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden
+          >
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+        </button>
       </div>
 
       {/* Hero converter card */}
@@ -208,13 +315,14 @@ export default function Converter() {
             />
           </div>
 
-          {/* SWAP */}
+          {/* CYCLE: advance the target unit to the next one in the list */}
           <div className="flex items-center justify-center md:flex-col">
             <motion.button
               type="button"
-              onClick={swap}
-              whileTap={{ scale: 0.85, rotate: 180 }}
-              aria-label="Swap units"
+              onClick={cycleTarget}
+              whileTap={{ scale: 0.85, rotate: 120 }}
+              aria-label="Cycle to the next unit"
+              title="Next unit"
               className="grid h-12 w-12 place-items-center rounded-2xl bg-accent text-white shadow-glow transition-colors hover:bg-accent-soft"
             >
               <svg
@@ -228,7 +336,10 @@ export default function Converter() {
                 strokeLinejoin="round"
                 aria-hidden
               >
-                <path d="M7 4v16M7 4l-3 3M7 4l3 3M17 20V4M17 20l-3-3M17 20l3-3" />
+                <path d="M3 12a9 9 0 0 1 15-6.7L21 8" />
+                <path d="M21 3v5h-5" />
+                <path d="M21 12a9 9 0 0 1-15 6.7L3 16" />
+                <path d="M3 21v-5h5" />
               </svg>
             </motion.button>
           </div>
