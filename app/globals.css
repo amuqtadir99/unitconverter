@@ -1,0 +1,127 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Light theme */
+  --surface: 255 255 255;
+  --surface-muted: 244 245 250;
+  --ink: 24 21 45;
+  --ink-muted: 96 100 122;
+  --accent: 99 91 255;
+  --accent-soft: 168 152 255;
+  --bg-from: 235 238 255;
+  --bg-via: 244 240 255;
+  --bg-to: 255 244 250;
+}
+
+:root[data-theme='dark'] {
+  --surface: 26 24 46;
+  --surface-muted: 20 18 38;
+  --ink: 236 238 255;
+  --ink-muted: 158 160 190;
+  --accent: 138 128 255;
+  --accent-soft: 92 84 200;
+  --bg-from: 12 10 30;
+  --bg-via: 18 14 42;
+  --bg-to: 26 12 46;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: rgb(var(--ink));
+  background: rgb(var(--surface-muted));
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100dvh;
+}
+
+/* Animated gradient-mesh backdrop — the "immersive" layer. */
+.aurora {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(50% 45% at 15% 20%, rgb(var(--accent) / 0.35), transparent 60%),
+    radial-gradient(45% 50% at 85% 25%, rgb(255 120 200 / 0.28), transparent 60%),
+    radial-gradient(55% 55% at 70% 90%, rgb(120 200 255 / 0.25), transparent 60%),
+    linear-gradient(135deg, rgb(var(--bg-from)), rgb(var(--bg-via)) 50%, rgb(var(--bg-to)));
+}
+
+.aurora-grid {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgb(var(--ink) / 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--ink) / 0.04) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black, transparent 75%);
+}
+
+/* Frosted glass card surface. */
+.glass {
+  background: rgb(var(--surface) / 0.55);
+  border: 1px solid rgb(255 255 255 / 0.18);
+  box-shadow: var(--tw-shadow, 0 8px 32px -8px rgba(15, 12, 41, 0.35));
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+}
+
+:root[data-theme='dark'] .glass {
+  background: rgb(var(--surface) / 0.5);
+  border: 1px solid rgb(255 255 255 / 0.08);
+}
+
+/* Shimmering headline text. */
+.text-shimmer {
+  background: linear-gradient(
+    100deg,
+    rgb(var(--accent)) 20%,
+    rgb(255 120 200) 40%,
+    rgb(var(--accent-soft)) 60%,
+    rgb(var(--accent)) 80%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 4s linear infinite;
+}
+
+/* Native select arrow removal handled per-component. */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--accent) / 0.4);
+  border-radius: 999px;
+}
